@@ -1,0 +1,14 @@
+{
+  "name": "slacker",
+  "version": "1.0.0",
+  "description": "Empowering use of Slack APIs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Wataru Oguchi <wataru@hey.com> (https://twitter.com/watarutwt/)",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  }
+}
