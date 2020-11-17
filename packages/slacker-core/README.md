@@ -1,0 +1,3 @@
+# `slacker-core`
+
+Under development.

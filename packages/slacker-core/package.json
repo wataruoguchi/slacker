@@ -1,0 +1,19 @@
+{
+  "name": "slacker-core",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Wataru Oguchi <wataru@hey.com> (https://twitter.com/watarutwt/)",
+  "homepage": "",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "jest",
+    "type-check": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@slack/web-api": "^5.13.0"
+  }
+}
