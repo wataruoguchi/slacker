@@ -2,13 +2,29 @@
   "name": "slacker",
   "version": "1.0.0",
   "description": "Empowering use of Slack APIs.",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-readme": "cat ./packages/slacker-cli/README.md > README.md && echo '\n' >> README.md && cat ./packages/slacker-core/README.md >> README.md",
+    "build": "lerna run build",
+    "bootstrap": "lerna bootstrap",
+    "hoist": "lerna link convert",
+    "test": "lerna run test",
+    "type-check": "lerna run type-check"
   },
   "author": "Wataru Oguchi <wataru@hey.com> (https://twitter.com/watarutwt/)",
   "license": "MIT",
   "devDependencies": {
-    "lerna": "^3.22.1"
+    "@types/jest": "^26.0.15",
+    "@types/node": "^14.14.7",
+    "@types/yargs": "^15.0.9",
+    "jest": "^26.6.3",
+    "lerna": "^3.22.1",
+    "nock": "^13.0.5",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {
+    "slacker-cli": "file:packages/slacker-cli",
+    "slacker-core": "file:packages/slacker-core"
   }
 }

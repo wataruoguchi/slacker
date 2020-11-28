@@ -1,28 +1,29 @@
-import {
-  SlackerClient,
-  WebAPICallOptions,
-  WebAPICallResult,
-  channel,
-  message,
-} from "../SlackerClient";
+import { WebAPICallOptions, PaginatePredicate } from "slacker-core";
+import { NodeSlackerClient } from "../NodeSlackerClient";
+import { channel, message } from "../typing";
 
 export async function archiveChannels(
-  channels,
-  daysToArchive = 31
+  channels: channel[],
+  daysToArchive: number = 31,
+  isDryRun = true
 ): Promise<boolean[]> {
-  const slackerClient = this as SlackerClient;
+  const nodeSlackerClient = this as NodeSlackerClient;
   const currentEpoch = Date.now() / 1000;
   const oneMonthEpoch = daysToArchive * 24 * 60 * 60; // 31 days. It does not need to be accurate.
 
   return await Promise.all(
     channels.map(async (channel: channel) => {
       const lastWorthwhileMessage = await getLastWorthwhileMessage.call(
-        slackerClient,
+        nodeSlackerClient,
         channel
       );
       if (lastWorthwhileMessage && lastWorthwhileMessage.ts && oneMonthEpoch) {
         if (currentEpoch - lastWorthwhileMessage.ts > oneMonthEpoch) {
-          const result = await archiveChannel.call(slackerClient, channel);
+          const result = await archiveChannel.call(
+            nodeSlackerClient,
+            channel,
+            isDryRun
+          );
           console.log(
             `Archiving '${channel.name}' - ${result ? "succeeded" : "failed"}.`
           );
@@ -37,11 +38,14 @@ export async function archiveChannels(
   );
 }
 
-async function archiveChannel(channel: channel): Promise<boolean> {
-  const slackerClient = this as SlackerClient;
+async function archiveChannel(
+  channel: channel,
+  isDryRun: boolean
+): Promise<boolean> {
+  const nodeSlackerClient = this as NodeSlackerClient;
   // This is a POST request. It should guarded by `isDryRun`.
-  if (slackerClient.isDryRun) return true;
-  const { ok } = await slackerClient.client.conversations.archive({
+  if (isDryRun) return true;
+  const { ok } = await nodeSlackerClient.conversations.archive({
     channel: channel.id,
   });
   return ok;
@@ -50,7 +54,7 @@ async function archiveChannel(channel: channel): Promise<boolean> {
 async function getLastWorthwhileMessage(
   channel: channel
 ): Promise<message | null> {
-  const slackerClient = this as SlackerClient;
+  const nodeSlackerClient = this as NodeSlackerClient;
   const defaultOptions: WebAPICallOptions = {
     limit: 5,
   };
@@ -66,17 +70,16 @@ async function getLastWorthwhileMessage(
 
   /**
    * Break when there's a message that doesn't have `subtype`.
-   * @param page
    */
-  function breakCondition(page: WebAPICallResult): boolean {
+  const breakCondition: PaginatePredicate = function (page) {
     return (
       page.messages &&
       Array.isArray(page.messages) &&
       page.messages.filter(messageFilter).length > 0
     );
-  }
+  };
 
-  const lastMessages = await slackerClient.getList(
+  const { list } = await nodeSlackerClient.fetchList(
     "conversations.history",
     {
       ...defaultOptions,
@@ -84,6 +87,7 @@ async function getLastWorthwhileMessage(
     },
     breakCondition
   );
+  const lastMessages = list;
 
   const lastWorthwhileMessages = lastMessages.filter(messageFilter);
   return lastWorthwhileMessages.length

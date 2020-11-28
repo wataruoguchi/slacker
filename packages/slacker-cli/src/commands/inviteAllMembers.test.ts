@@ -1,5 +1,7 @@
 const nock = require("nock");
-import { SlackerClient, LogLevel, channel } from "../SlackerClient";
+import { LogLevel } from "slacker-core";
+import { NodeSlackerClient } from "../NodeSlackerClient";
+import { channel } from "../typing";
 import { inviteAllMembers } from "./inviteAllMembers";
 
 const channels: channel[] = [
@@ -22,12 +24,12 @@ const channels: channel[] = [
 ];
 
 describe("inviteAllMembers", () => {
-  let slackerClient: SlackerClient;
+  let slackerClient: NodeSlackerClient;
   let scope;
 
   beforeEach(() => {
     scope = nock("https://slack.com");
-    slackerClient = new SlackerClient("xoxb-faketoken1234", {
+    slackerClient = new NodeSlackerClient("xoxb-faketoken1234", {
       logLevel: LogLevel.ERROR,
     });
     scope
@@ -37,7 +39,8 @@ describe("inviteAllMembers", () => {
   });
 
   test("It fetches a channel list.", async () => {
-    await inviteAllMembers.call(slackerClient, channels, "foo");
+    const users = [];
+    await inviteAllMembers.call(slackerClient, channels, users, "foo");
     expect(1).toBe(1);
   });
 });

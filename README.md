@@ -104,3 +104,22 @@ Bust 'user.list'.
 ```shell
 SLACK_TOKEN=xoxb-1234567890 slacker exec cache user.list
 ```
+
+
+# `slacker-core`
+
+The very thin wrapper of `WebClient` from [@slack/web-api](https://www.npmjs.com/package/@slack/web-api).
+
+## What's different
+
+It has a built-in paginate function that returns all request's result as an array.
+
+## Warning
+
+The pagination feature only supports the following requests:
+
+- conversations.list
+- conversations.history
+- users.list
+
+They are stored in `src/listAttributes.ts`

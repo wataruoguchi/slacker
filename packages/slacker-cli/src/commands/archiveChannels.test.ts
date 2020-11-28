@@ -1,5 +1,7 @@
 const nock = require("nock");
-import { SlackerClient, channel, LogLevel } from "../SlackerClient";
+import { LogLevel } from "slacker-core";
+import { NodeSlackerClient } from "../NodeSlackerClient";
+import { channel } from "../typing";
 import { archiveChannels } from "./archiveChannels";
 const conversationsHistory = require("../../mock/responses/conversations.history.json");
 
@@ -23,12 +25,12 @@ const channels: channel[] = [
 ];
 
 describe("archiveChannels", () => {
-  let slackerClient: SlackerClient;
+  let nodeSlackerClient: NodeSlackerClient;
   let scope;
 
   beforeEach(() => {
     scope = nock("https://slack.com");
-    slackerClient = new SlackerClient("xoxb-faketoken1234", {
+    nodeSlackerClient = new NodeSlackerClient("xoxb-faketoken1234", {
       logLevel: LogLevel.ERROR,
     });
   });
@@ -39,7 +41,7 @@ describe("archiveChannels", () => {
       .post(/api\/conversations\.history/)
       .reply(200, conversationsHistory);
     const [resultForChannel1, resultForChannel2] = await archiveChannels.call(
-      slackerClient,
+      nodeSlackerClient,
       channels
     );
     expect(resultForChannel1).toBe(true);
