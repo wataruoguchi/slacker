@@ -17,9 +17,8 @@
   "author": "Wataru Oguchi <wataru@hey.com> (https://twitter.com/watarutwt/)",
   "license": "MIT",
   "dependencies": {
-    "flat-cache": "^3.0.4",
     "node-cache": "^5.1.2",
-    "slacker-core": "file:../slacker-core",
+    "slacker-core": "^1.1.0",
     "yargs": "^15.4.1"
   }
 }
